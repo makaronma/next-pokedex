@@ -7,7 +7,7 @@ import PokeItem from "common/components/PokeDisplay/Item";
 import ItemsContainer from "common/components/PokeDisplay/ItemsContainer";
 import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getAllPokes, getAllTypesName } from "common/utils/pokeapi";
+import { getAllPokes, getAllTypesName } from "common/utils/pokeApi";
 
 export default function Home({ pokes, types }) {
   const [pokesDisplay, setPokesDisplay] = useState();

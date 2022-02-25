@@ -1,4 +1,4 @@
-import { getAllPokesPath, getSinglePoke } from "common/utils/pokeapi";
+import { getAllPokesPath, getSinglePoke } from "common/utils/pokeApi";
 import Image from "next/image";
 const PokeScreen = ({ pokeData }) => {
   const {
