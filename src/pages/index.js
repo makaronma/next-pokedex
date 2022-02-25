@@ -1,12 +1,15 @@
 import Head from "next/head";
-import PokeItem from "common/components/PokeDisplay/Item";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { useState, useEffect, useRef, useCallback } from "react";
 
-export default function Home({ pokes }) {
+import PokeItem from "common/components/PokeDisplay/Item";
+import ItemsContainer from "common/components/PokeDisplay/ItemsContainer";
+import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { getAllPokes, getAllTypesName } from "common/utils/pokeapi";
+
+export default function Home({ pokes, types }) {
   const [pokesDisplay, setPokesDisplay] = useState();
   const filterKeyword = useRef();
 
@@ -14,10 +17,14 @@ export default function Home({ pokes }) {
     setPokesDisplay(pokes);
   }, [pokes]);
 
+  const checkMatchCriteria = (poke) => {
+    const regex = new RegExp(`${filterKeyword.current.value}`);
+    return poke.name.match(regex);
+  };
+
   const handleFilterPoke = useCallback(() => {
-    const filteredPokes = pokes.filter((poke) =>
-      poke.name.includes(filterKeyword.current.value)
-    );
+    const filteredPokes = pokes.filter((poke) => checkMatchCriteria(poke));
+    console.log(pokes);
     setPokesDisplay(filteredPokes);
   }, [pokes]);
 
@@ -35,19 +42,14 @@ export default function Home({ pokes }) {
           variant="standard"
           inputRef={filterKeyword}
         />
-        <IconButton aria-label="search" color="primary" onClick={handleFilterPoke}>
+        <IconButton aria-label="search" onClick={handleFilterPoke}>
           <SearchIcon />
         </IconButton>
+        <AdvanceSearch />
       </div>
       <h2>Poke List: </h2>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
+      <ItemsContainer>
         {pokesDisplay &&
           pokesDisplay.map((poke) => (
             <PokeItem
@@ -57,34 +59,19 @@ export default function Home({ pokes }) {
               img={poke.image}
             />
           ))}
-      </Box>
+      </ItemsContainer>
     </div>
   );
 }
 
 export async function getStaticProps() {
-  const res = await fetch(
-    `https://pokeapi.co/api/v2/pokemon?offset=0&limit=${process.env.POKEAMOUNT}`
-  );
-  const { results } = await res.json();
-  const urls = results.map((r) => r.url);
-
-  const pokes = await Promise.all(
-    urls.map(async (url) => {
-      const res = await fetch(url);
-      return res.json();
-    })
-  );
-  const pokesModified = pokes.map(({ id, name, sprites, types }) => ({
-    id,
-    name,
-    image: sprites.front_default,
-    types,
-  }));
+  const pokes = await getAllPokes();
+  const types = await getAllTypesName();
 
   return {
     props: {
-      pokes: pokesModified,
+      pokes,
+      types,
     },
   };
 }

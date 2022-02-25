@@ -8,7 +8,7 @@ import Image from "next/image";
 
 const Item = ({ id, name, img }) => {
   return (
-    <Card sx={{ minWidth: 288, maxWidth: "25%", width: "100%" }}>
+    <Card sx={{ minWidth: 270, maxWidth: "23%", width: "100%", m: 1 }}>
       <Link href={`/pokes/${id}`} passHref>
         <CardActionArea>
           <CardMedia

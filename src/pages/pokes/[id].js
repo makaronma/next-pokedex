@@ -1,3 +1,4 @@
+import { getAllPokesPath, getSinglePoke } from "common/utils/pokeapi";
 import Image from "next/image";
 const PokeScreen = ({ pokeData }) => {
   const {
@@ -13,7 +14,6 @@ const PokeScreen = ({ pokeData }) => {
   } = pokeData;
   const { hp, attack, defense, specialAttack, specialDefense, speed } =
     baseStats;
-  // console.log(pokeData);
 
   return (
     <div>
@@ -42,61 +42,20 @@ const PokeScreen = ({ pokeData }) => {
 };
 
 export async function getStaticProps({ params }) {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.id}`);
-  const {
-    id,
-    name,
-    abilities,
-    height,
-    weight,
-    species,
-    sprites,
-    stats,
-    types,
-  } = await res.json();
+  const pokeData = await getSinglePoke(params.id);
   return {
     props: {
-      pokeData: {
-        id,
-        name,
-        abilities,
-        height,
-        weight,
-        species,
-        image: sprites.front_default,
-        baseStats: {
-          hp: stats[0].base_stat,
-          attack: stats[1].base_stat,
-          defense: stats[2].base_stat,
-          specialAttack: stats[3].base_stat,
-          specialDefense: stats[4].base_stat,
-          speed: stats[5].base_stat,
-        },
-        types,
-      },
+      pokeData,
     },
   };
 }
 
 export const getStaticPaths = async () => {
-  try {
-    const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon?offset=0&limit=${process.env.POKEAMOUNT}`
-    );
-    const { results } = await res.json();
-
-    return {
-      paths: results.map(({ url }) => {
-        const id = url.split(/[/ ]+/).slice(-2).join("");
-        return {
-          params: { id },
-        };
-      }),
-      fallback: false,
-    };
-  } catch (error) {
-    console.log(error);
-  }
+  const paths = await getAllPokesPath();
+  return {
+    paths,
+    fallback: false,
+  };
 };
 
 export default PokeScreen;
