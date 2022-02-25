@@ -5,15 +5,15 @@ const PokeScreen = ({ pokeData }) => {
     name,
     height,
     weight,
-    abilities,
-    species,
+    // abilities,
+    // species,
     image,
     baseStats,
-    types,
+    // types,
   } = pokeData;
   const { hp, attack, defense, specialAttack, specialDefense, speed } =
     baseStats;
-  console.log(pokeData);
+  // console.log(pokeData);
 
   return (
     <div>
@@ -54,16 +54,6 @@ export async function getStaticProps({ params }) {
     stats,
     types,
   } = await res.json();
-  const image = sprites.front_default;
-  const baseStats = {
-    hp: stats[0].base_stat,
-    attack: stats[1].base_stat,
-    defense: stats[2].base_stat,
-    specialAttack: stats[3].base_stat,
-    specialDefense: stats[4].base_stat,
-    speed: stats[5].base_stat,
-  };
-
   return {
     props: {
       pokeData: {
@@ -73,8 +63,15 @@ export async function getStaticProps({ params }) {
         height,
         weight,
         species,
-        image,
-        baseStats,
+        image: sprites.front_default,
+        baseStats: {
+          hp: stats[0].base_stat,
+          attack: stats[1].base_stat,
+          defense: stats[2].base_stat,
+          specialAttack: stats[3].base_stat,
+          specialDefense: stats[4].base_stat,
+          speed: stats[5].base_stat,
+        },
         types,
       },
     },
@@ -84,7 +81,7 @@ export async function getStaticProps({ params }) {
 export const getStaticPaths = async () => {
   try {
     const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon?offset=0&limit=8`
+      `https://pokeapi.co/api/v2/pokemon?offset=0&limit=${process.env.POKEAMOUNT}`
     );
     const { results } = await res.json();
 

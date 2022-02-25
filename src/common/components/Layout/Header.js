@@ -1,9 +1,10 @@
+import ResponsiveAppBar from "./ResponsiveAppBar";
 const Header = () => {
-    return (
-        <div>
-            Header
-        </div>
-    );
-}
+  return (
+    <div>
+      <ResponsiveAppBar />
+    </div>
+  );
+};
 
 export default Header;

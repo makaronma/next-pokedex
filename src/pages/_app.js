@@ -2,10 +2,12 @@ import React from "react";
 import { CacheProvider } from "@emotion/react";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 
+import Container from "@mui/material/Container";
+
 import createEmotionCache from "common/utils/createEmotionCache";
 import darkTheme from "styles/theme/darkTheme";
 import "styles/globals.css";
-import Layout from 'common/components/Layout'
+import Layout from "common/components/Layout";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -17,7 +19,9 @@ const MyApp = (props) => {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <Layout>
-          <Component {...pageProps} />
+          <Container maxWidth="lg">
+            <Component {...pageProps} />
+          </Container>
         </Layout>
       </ThemeProvider>
     </CacheProvider>
