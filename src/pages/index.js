@@ -1,12 +1,5 @@
 import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { CardActionArea, CardActions } from "@mui/material";
+import PokeItem from "common/components/PokeDisplay/Item";
 
 export default function Home({ pokes }) {
   return (
@@ -18,50 +11,17 @@ export default function Home({ pokes }) {
       </Head>
       <div>Search Bar</div>
       <h2>Poke List: </h2>
-      <Card sx={{ maxWidth: 345 }}>
-        <Link href={"/login"} passHref>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-              alt="green iguana"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Lizards are a widespread group of squamate reptiles, with over
-                6,000 species, ranging across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Link>
-        <Link href={"/profile"} passHref>
-          <CardActions>Share</CardActions>
-        </Link>
-      </Card>
-      <div>
+
+      <div
+        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+      >
         {pokes.map((poke) => (
-          <Link
+          <PokeItem
             key={`pokeListItem-${poke.id}`}
-            href={`/pokes/${poke.id}`}
-            passHref
-          >
-            <div>
-              <p>id: {poke.id}</p>
-              <p>name: {poke.name}</p>
-              <Image
-                loader={() => poke.image}
-                src={`${poke.name}-front-default.png`}
-                alt={poke.name}
-                width={100}
-                height={100}
-              />
-              {/* <p>types: {poke.types}</p> */}
-            </div>
-          </Link>
+            id={poke.id}
+            name={poke.name}
+            img={poke.image}
+          />
         ))}
       </div>
     </div>
