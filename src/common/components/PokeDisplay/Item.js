@@ -2,13 +2,13 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActionArea, CardActions } from "@mui/material";
+import { CardActionArea } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
 
 const Item = ({ id, name, img }) => {
   return (
-    <Card sx={{ minWidth: 216, maxWidth: "25%", width: "100%" }}>
+    <Card sx={{ minWidth: 288, maxWidth: "25%", width: "100%" }}>
       <Link href={`/pokes/${id}`} passHref>
         <CardActionArea>
           <CardMedia
@@ -18,8 +18,8 @@ const Item = ({ id, name, img }) => {
               loader={() => img}
               src={`${name}-front-default.png`}
               alt={name}
-              width="100%"
-              height="100%"
+              width="130"
+              height="130"
               objectFit="contain"
             />
           </CardMedia>

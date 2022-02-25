@@ -40,16 +40,16 @@ const ResponsiveAppBar = () => {
     <AppBar position="static">
       <Container maxWidth="lg">
         <Toolbar disableGutters>
-          <NextLink href={"/"} passHref>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
-            >
-              <Link underline="none">PokeDexasd</Link>
-            </Typography>
-          </NextLink>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+          >
+            <NextLink href={"/"} passHref>
+              <Link underline="none">PokeDex</Link>
+            </NextLink>
+          </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -85,16 +85,16 @@ const ResponsiveAppBar = () => {
               </MenuItem>
             </Menu>
           </Box>
-          <NextLink href={"/"} passHref>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
-            >
-              PokeDex
-            </Typography>
-          </NextLink>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+          >
+            <NextLink href={"/"} passHref>
+              <Link underline="none">PokeDex</Link>
+            </NextLink>
+          </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
               onClick={handleCloseNavMenu}
