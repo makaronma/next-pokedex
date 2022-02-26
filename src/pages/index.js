@@ -1,15 +1,12 @@
 import Head from "next/head";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 
 import PokeItem from "common/components/PokeDisplay/Item";
-import ItemsContainer from "common/components/PokeDisplay/ItemsContainer";
+import PokesContainer from "common/components/PokeDisplay/ItemsContainer";
 import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getAllPokes, getAllTypesName } from "common/utils/pokeApi";
+import NormalSearch from "common/components/PokeDisplay/NormalSearch";
+import LoadMoreBtn from "common/components/PokeDisplay/LoadMoreBtn";
 
 export default function Home({ pokes, types, loadMoreAmount }) {
   const [pokesBeforeDisplay, setPokesBeforeDisplay] = useState([]);
@@ -19,7 +16,6 @@ export default function Home({ pokes, types, loadMoreAmount }) {
 
   // Init pokes array
   useEffect(() => {
-    console.log("init");
     setPokesBeforeDisplay(pokes);
   }, [pokes]);
 
@@ -27,27 +23,27 @@ export default function Home({ pokes, types, loadMoreAmount }) {
   useEffect(() => {
     const start = page * loadMoreAmount;
     const end = start + loadMoreAmount;
-    console.log(`Load More from ${start} to ${end}`);
     setPokesDisplay((prev) => [
       ...prev,
       ...pokesBeforeDisplay.slice(start, end),
     ]);
   }, [pokesBeforeDisplay, page, loadMoreAmount]);
 
-  // Loadmore (add page)
-  const handleLoadMore = () => {
-    console.log("loadmore btn pressed");
-    setPage((prev) => prev + 1);
-  };
-
-  // filter
-  const checkMatchCriteria = (poke) => {
-    const regex = new RegExp(`${filterKeyword.current.value}`);
-    return poke.name.match(regex);
-  };
-
   // filter and reset poke array
   const handleFilterPoke = useCallback(() => {
+    const regex = new RegExp(`${filterKeyword.current.value}`);
+    const matchName = (poke) => {
+      return poke.name.match(regex);
+    };
+
+    const matchID = (poke) => {
+      return String(poke.id).match(regex);
+    };
+
+    const checkMatchCriteria = (poke) => {
+      return matchName(poke) || matchID(poke);
+    };
+
     const filteredPokes = pokes.filter((poke) => checkMatchCriteria(poke));
     setPokesDisplay([]);
     setPokesBeforeDisplay(filteredPokes);
@@ -62,21 +58,13 @@ export default function Home({ pokes, types, loadMoreAmount }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div style={{ display: "flex", alignItems: "end" }}>
-        <TextField
-          id="standard-basic"
-          label="Keyword"
-          variant="standard"
-          inputRef={filterKeyword}
-        />
-        <IconButton aria-label="search" onClick={handleFilterPoke}>
-          <SearchIcon />
-        </IconButton>
-      </div>
+      <NormalSearch
+        filterKeyword={filterKeyword}
+        handleFilterPoke={handleFilterPoke}
+      />
       <AdvanceSearch types={types} />
 
-      <h2>Poke List: </h2>
-      <ItemsContainer>
+      <PokesContainer>
         {pokesDisplay &&
           pokesDisplay.map((poke) => (
             <PokeItem
@@ -86,16 +74,13 @@ export default function Home({ pokes, types, loadMoreAmount }) {
               img={poke.image}
             />
           ))}
-      </ItemsContainer>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        {pokesBeforeDisplay.length <= page * loadMoreAmount + loadMoreAmount ? (
-          "NO More"
-        ) : (
-          <Button variant="outlined" onClick={handleLoadMore}>
-            More
-          </Button>
-        )}
-      </Box>
+      </PokesContainer>
+
+      {pokesBeforeDisplay.length <= page * loadMoreAmount + loadMoreAmount ? (
+        "NO More"
+      ) : (
+        <LoadMoreBtn setPage={setPage} />
+      )}
     </div>
   );
 }

@@ -12,7 +12,7 @@ export const getAllPokes = async () => {
     })
   );
   const pokesModified = pokes.map(({ id, name, sprites, types }) => ({
-    id,
+    id: `${`00${id}`.slice(-3)}`,
     name,
     image: sprites.front_default,
     types,
@@ -36,7 +36,7 @@ export const getSinglePoke = async (pokeId) => {
   } = await res.json();
 
   const pokeData = {
-    id,
+    id: `${`00${id}`.slice(-3)}`,
     name,
     abilities,
     height,
@@ -63,8 +63,10 @@ export const getAllPokesPath = async () => {
   );
   const { results } = await res.json();
 
+  const regex = new RegExp(/(?<=\/)\d+/);
+
   const paths = results.map(({ url }) => {
-    const id = url.split(/[/ ]+/).slice(-2).join("");
+    const id = url.match(regex)[0];
     return {
       params: { id },
     };
