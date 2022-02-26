@@ -1,15 +1,9 @@
-import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 const ItemsContainer = ({ children }) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-      }}
-    >
+    <Grid container spacing={{ xs: 2, md: 3 }}>
       {children}
-    </Box>
+    </Grid>
   );
 };
 

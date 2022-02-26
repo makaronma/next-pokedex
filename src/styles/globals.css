@@ -15,6 +15,12 @@ a {
   box-sizing: border-box;
 }
 
-.advanceSearch .choiceSelected{
-  outline: 5px white solid;
+.advanceSearch .choiceSelected {
+  outline: 1px white solid;
+}
+.advanceSearch .typeChoice {
+  background-color: rgb(34, 34, 34);
+}
+.advanceSearch .typeChoice.disabled {
+  color: rgb(34, 34, 34);
 }

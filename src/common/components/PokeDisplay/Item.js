@@ -1,4 +1,4 @@
-import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
@@ -10,7 +10,7 @@ import { useRef } from "react";
 const Item = ({ id, name, img }) => {
   const lazyRoot = useRef(null);
   return (
-    <Card sx={{ minWidth: 270, maxWidth: "23%", width: "100%", m: 1 }}>
+    <Grid item xs={6} md={3}>
       <Link href={`/pokes/${id}`} passHref>
         <CardActionArea>
           <CardMedia
@@ -36,7 +36,7 @@ const Item = ({ id, name, img }) => {
           </CardContent>
         </CardActionArea>
       </Link>
-    </Card>
+    </Grid>
   );
 };
 

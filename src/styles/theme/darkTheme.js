@@ -3,15 +3,15 @@ import { createTheme } from "@mui/material/styles";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
-    // primary: {
-    //   main: "#01579b",
-    // },
-    // text: {
-    //   primary: "#fff",
-    // },
-    // background: {
-    //   default: "#212930",
-    // },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 900,
+        lg: 1200,
+        xl: 1536,
+      },
+    },
   },
 });
 

@@ -22,8 +22,6 @@ export default function Home({ pokes, types, loadMoreAmount }) {
 
   // Init and Loadmore (change pokes array)
   useEffect(() => {
-    // console.log("effect");
-    // console.log(pokesBeforeDisplay);
     const start = page * loadMoreAmount;
     const end = start + loadMoreAmount;
     setPokesDisplay((prev) => [
@@ -33,10 +31,7 @@ export default function Home({ pokes, types, loadMoreAmount }) {
   }, [pokesBeforeDisplay, page, loadMoreAmount]);
 
   const updatePokes = useCallback((newPokes) => {
-    // console.log("update");
-    // console.log(newPokes);
     setPokesDisplay([]);
-    // setPokesBeforeDisplay([])
     setPokesBeforeDisplay(newPokes);
     setPage(0);
   }, []);
