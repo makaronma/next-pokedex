@@ -1,3 +1,11 @@
+const addTwoZero = (num) => {
+  return num.toString().padStart(3, 0);
+};
+
+const removeZero = (num) => {
+  return num.match(/[^0]\d*/);
+};
+
 export const getAllPokes = async () => {
   const res = await fetch(
     `https://pokeapi.co/api/v2/pokemon?offset=0&limit=${process.env.POKEAMOUNT}`
@@ -12,7 +20,7 @@ export const getAllPokes = async () => {
     })
   );
   const pokesModified = pokes.map(({ id, name, sprites, types }) => ({
-    id: `${`00${id}`.slice(-3)}`,
+    id: addTwoZero(id),
     name,
     image: sprites.front_default,
     types,
@@ -22,7 +30,9 @@ export const getAllPokes = async () => {
 };
 
 export const getSinglePoke = async (pokeId) => {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeId}`);
+  const res = await fetch(
+    `https://pokeapi.co/api/v2/pokemon/${removeZero(pokeId)}`
+  );
   const {
     id,
     name,
@@ -36,7 +46,7 @@ export const getSinglePoke = async (pokeId) => {
   } = await res.json();
 
   const pokeData = {
-    id: `${`00${id}`.slice(-3)}`,
+    id: addTwoZero(id),
     name,
     abilities,
     height,
@@ -63,10 +73,10 @@ export const getAllPokesPath = async () => {
   );
   const { results } = await res.json();
 
-  const regex = new RegExp(/(?<=\/)\d+/);
+  const regex = /(?<=\/)\d+/;
 
   const paths = results.map(({ url }) => {
-    const id = url.match(regex)[0];
+    const id = addTwoZero(url.match(regex));
     return {
       params: { id },
     };
