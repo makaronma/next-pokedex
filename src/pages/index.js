@@ -3,13 +3,13 @@ import Box from "@mui/material/Box";
 
 import PokeItem from "common/components/PokeDisplay/Item";
 import PokesContainer from "common/components/PokeDisplay/ItemsContainer";
-import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
+// import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getAllPokes, getAllTypesName } from "common/utils/pokeApi";
 import NormalSearch from "common/components/PokeDisplay/NormalSearch";
 import LoadMoreBtn from "common/components/PokeDisplay/LoadMoreBtn";
 
-export default function Home({ pokes, types, loadMoreAmount }) {
+export default function Home({ pokes, loadMoreAmount }) {
   const [pokesBeforeDisplay, setPokesBeforeDisplay] = useState([]);
   const [pokesDisplay, setPokesDisplay] = useState([]);
   const [page, setPage] = useState(0);
@@ -67,7 +67,7 @@ export default function Home({ pokes, types, loadMoreAmount }) {
         filterKeyword={filterKeyword}
         handleFilterPoke={handleFilterPoke}
       />
-      <AdvanceSearch types={types} updatePokes={updatePokes} pokes={pokes} />
+      {/* <AdvanceSearch types={types} updatePokes={updatePokes} pokes={pokes} /> */}
 
       <Box sx={{ minHeight: 850 }}>
         <PokesContainer>
