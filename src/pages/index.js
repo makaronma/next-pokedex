@@ -3,13 +3,13 @@ import Box from "@mui/material/Box";
 
 import PokeItem from "common/components/PokeDisplay/Item";
 import PokesContainer from "common/components/PokeDisplay/ItemsContainer";
-// import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
-import { useState, useEffect, useRef, useCallback } from "react";
+import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { getAllPokes, getAllTypesName } from "common/utils/pokeApi";
 import NormalSearch from "common/components/PokeDisplay/NormalSearch";
 import LoadMoreBtn from "common/components/PokeDisplay/LoadMoreBtn";
 
-export default function Home({ pokes, loadMoreAmount }) {
+export default function Home({ pokes, types, loadMoreAmount }) {
   const [pokesBeforeDisplay, setPokesBeforeDisplay] = useState([]);
   const [pokesDisplay, setPokesDisplay] = useState([]);
   const [page, setPage] = useState(0);
@@ -22,6 +22,8 @@ export default function Home({ pokes, loadMoreAmount }) {
 
   // Init and Loadmore (change pokes array)
   useEffect(() => {
+    // console.log("effect");
+    // console.log(pokesBeforeDisplay);
     const start = page * loadMoreAmount;
     const end = start + loadMoreAmount;
     setPokesDisplay((prev) => [
@@ -30,11 +32,14 @@ export default function Home({ pokes, loadMoreAmount }) {
     ]);
   }, [pokesBeforeDisplay, page, loadMoreAmount]);
 
-  const updatePokes = (newPokes) => {
+  const updatePokes = useCallback((newPokes) => {
+    // console.log("update");
+    // console.log(newPokes);
     setPokesDisplay([]);
+    // setPokesBeforeDisplay([])
     setPokesBeforeDisplay(newPokes);
     setPage(0);
-  };
+  }, []);
 
   // filter and reset poke array
   const handleFilterPoke = useCallback(() => {
@@ -53,7 +58,23 @@ export default function Home({ pokes, loadMoreAmount }) {
 
     const filteredPokes = pokes.filter((poke) => checkMatchCriteria(poke));
     updatePokes(filteredPokes);
-  }, [pokes]);
+  }, [pokes, updatePokes]);
+
+  const pokesItems = useMemo(
+    () => (
+      <>
+        {pokesDisplay.map((poke) => (
+          <PokeItem
+            key={`pokeListItem-${poke.id}`}
+            id={poke.id}
+            name={poke.name}
+            img={poke.image}
+          />
+        ))}
+      </>
+    ),
+    [pokesDisplay]
+  );
 
   return (
     <div>
@@ -67,20 +88,10 @@ export default function Home({ pokes, loadMoreAmount }) {
         filterKeyword={filterKeyword}
         handleFilterPoke={handleFilterPoke}
       />
-      {/* <AdvanceSearch types={types} updatePokes={updatePokes} pokes={pokes} /> */}
+      <AdvanceSearch types={types} updatePokes={updatePokes} pokes={pokes} />
 
       <Box sx={{ minHeight: 850 }}>
-        <PokesContainer>
-          {pokesDisplay &&
-            pokesDisplay.map((poke) => (
-              <PokeItem
-                key={`pokeListItem-${poke.id}`}
-                id={poke.id}
-                name={poke.name}
-                img={poke.image}
-              />
-            ))}
-        </PokesContainer>
+        <PokesContainer>{pokesDisplay && pokesItems}</PokesContainer>
 
         {pokesBeforeDisplay.length <= page * loadMoreAmount + loadMoreAmount ? (
           "NO More"

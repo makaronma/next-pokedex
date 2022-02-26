@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import ButtonBase from "@mui/material/ButtonBase";
 import Typography from "@mui/material/Typography";
 
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const AdvanceSearch = ({ types, updatePokes, pokes }) => {
   const [typeChoices, setTypeChoices] = useState([]);
@@ -16,16 +16,15 @@ const AdvanceSearch = ({ types, updatePokes, pokes }) => {
           ? poke.types.map((s) => s.type.name)
           : [poke.types[0].type.name];
 
-      return typeChoices.reduce((prev, choice) => {
-        return prev && pokeTypes.includes(choice);
-      }, true);
+      const result = typeChoices.every((r) => pokeTypes.indexOf(r) >= 0);
+      return result;
     };
 
     const filteredPokes = pokes.filter((poke) => matchType(poke));
     updatePokes(filteredPokes);
   }, [typeChoices, pokes, updatePokes]);
 
-  const handleChooseType = useCallback((type) => {
+  const handleChooseType = (type) => {
     setTypeChoices((prevChoices) => {
       // cancel choice
       if (prevChoices.includes(type))
@@ -37,7 +36,7 @@ const AdvanceSearch = ({ types, updatePokes, pokes }) => {
       // [latest choice, current choice]
       return [prevChoices.pop(), type];
     });
-  }, []);
+  };
 
   return (
     <Box sx={{ mt: 2, mb: 2 }} className="advanceSearch">
