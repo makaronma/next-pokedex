@@ -14,3 +14,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.advanceSearch .choiceSelected{
+  outline: 5px white solid;
+}

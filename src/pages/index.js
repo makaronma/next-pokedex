@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Box from "@mui/material/Box";
 
 import PokeItem from "common/components/PokeDisplay/Item";
 import PokesContainer from "common/components/PokeDisplay/ItemsContainer";
@@ -29,6 +30,12 @@ export default function Home({ pokes, types, loadMoreAmount }) {
     ]);
   }, [pokesBeforeDisplay, page, loadMoreAmount]);
 
+  const updatePokes = (newPokes) => {
+    setPokesDisplay([]);
+    setPokesBeforeDisplay(newPokes);
+    setPage(0);
+  };
+
   // filter and reset poke array
   const handleFilterPoke = useCallback(() => {
     const regex = new RegExp(`${filterKeyword.current.value}`);
@@ -45,9 +52,7 @@ export default function Home({ pokes, types, loadMoreAmount }) {
     };
 
     const filteredPokes = pokes.filter((poke) => checkMatchCriteria(poke));
-    setPokesDisplay([]);
-    setPokesBeforeDisplay(filteredPokes);
-    setPage(0);
+    updatePokes(filteredPokes);
   }, [pokes]);
 
   return (
@@ -62,25 +67,27 @@ export default function Home({ pokes, types, loadMoreAmount }) {
         filterKeyword={filterKeyword}
         handleFilterPoke={handleFilterPoke}
       />
-      <AdvanceSearch types={types} />
+      <AdvanceSearch types={types} updatePokes={updatePokes} pokes={pokes} />
 
-      <PokesContainer>
-        {pokesDisplay &&
-          pokesDisplay.map((poke) => (
-            <PokeItem
-              key={`pokeListItem-${poke.id}`}
-              id={poke.id}
-              name={poke.name}
-              img={poke.image}
-            />
-          ))}
-      </PokesContainer>
+      <Box sx={{ minHeight: 850 }}>
+        <PokesContainer>
+          {pokesDisplay &&
+            pokesDisplay.map((poke) => (
+              <PokeItem
+                key={`pokeListItem-${poke.id}`}
+                id={poke.id}
+                name={poke.name}
+                img={poke.image}
+              />
+            ))}
+        </PokesContainer>
 
-      {pokesBeforeDisplay.length <= page * loadMoreAmount + loadMoreAmount ? (
-        "NO More"
-      ) : (
-        <LoadMoreBtn setPage={setPage} />
-      )}
+        {pokesBeforeDisplay.length <= page * loadMoreAmount + loadMoreAmount ? (
+          "NO More"
+        ) : (
+          <LoadMoreBtn setPage={setPage} />
+        )}
+      </Box>
     </div>
   );
 }
