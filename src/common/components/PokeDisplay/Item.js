@@ -5,8 +5,10 @@ import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
+import { useRef } from "react";
 
 const Item = ({ id, name, img }) => {
+  const lazyRoot = useRef(null);
   return (
     <Card sx={{ minWidth: 270, maxWidth: "23%", width: "100%", m: 1 }}>
       <Link href={`/pokes/${id}`} passHref>
@@ -15,6 +17,7 @@ const Item = ({ id, name, img }) => {
             style={{ display: "flex", justifyContent: "center", padding: 10 }}
           >
             <Image
+              lazyRoot={lazyRoot}
               loader={() => img}
               src={`${name}-front-default.png`}
               alt={name}
