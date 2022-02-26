@@ -9,6 +9,8 @@ import { getAllPokes, getAllTypesName } from "common/utils/pokeApi";
 import NormalSearch from "common/components/PokeDisplay/NormalSearch";
 import LoadMoreBtn from "common/components/PokeDisplay/LoadMoreBtn";
 
+//
+
 export default function Home({ pokes, types, loadMoreAmount }) {
   const [pokesBeforeDisplay, setPokesBeforeDisplay] = useState([]);
   const [pokesDisplay, setPokesDisplay] = useState([]);
