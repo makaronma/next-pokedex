@@ -2,18 +2,15 @@ import Head from "next/head";
 
 import PokeItem from "common/components/PokeDisplay/Item";
 import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { getAllPokes, getAllTypesName } from "common/utils/pokeApi";
 import NormalSearch from "common/components/PokeDisplay/NormalSearch";
 import usePokeSearch from "common/hooks/usePokeSearch";
 import SearchBtn from "common/components/PokeDisplay/SearchBtn";
 import DisplayPanel from "common/components/PokeDisplay/DisplayPanel";
+import usePokeDisplay from "common/hooks/usePokeDisplay";
 
 export default function Home({ pokes, types, loadMoreAmount }) {
-  const [pokesBeforeDisplay, setPokesBeforeDisplay] = useState([]);
-  const [pokesDisplay, setPokesDisplay] = useState([]);
-  const [page, setPage] = useState(0);
-
   const [conditions, setConditions] = useState({ keyword: "", types: [] });
   const [conditionsBeforeSearch, setConditionsBeforeSearch] = useState({
     keyword: "",
@@ -21,38 +18,17 @@ export default function Home({ pokes, types, loadMoreAmount }) {
   });
 
   const filteredPokes = usePokeSearch(pokes, conditions);
-
-  // Assign Init Pokes Before Display
-  useEffect(() => {
-    setPokesBeforeDisplay(pokes);
-  }, [pokes]);
-
-  // Handle Display Pokes(Init && Loadmore)
-  useEffect(() => {
-    // console.log("display pokes");
-    const start = page * loadMoreAmount;
-    const end = start + loadMoreAmount;
-    setPokesDisplay((prev) => [
-      ...prev,
-      ...pokesBeforeDisplay.slice(start, end),
-    ]);
-  }, [pokesBeforeDisplay, page, loadMoreAmount]);
-
-  // Assign Filtered Pokes Before Display
-  useEffect(() => {
-    // console.log("update filtered");
-    // console.log(filteredPokes);
-    setPokesDisplay([]);
-    setPokesBeforeDisplay(filteredPokes);
-    setPage(0);
-  }, [filteredPokes]);
+  const { pokesDisplay, hasMore, setPage } = usePokeDisplay(
+    pokes,
+    loadMoreAmount,
+    filteredPokes
+  );
 
   const searchOnClick = () => {
     setConditions(conditionsBeforeSearch);
   };
 
   const pokesItems = useMemo(() => {
-    // console.log("update Item");
     return (
       <>
         {pokesDisplay.map((poke) => (
@@ -81,9 +57,7 @@ export default function Home({ pokes, types, loadMoreAmount }) {
       <DisplayPanel
         pokesDisplay={pokesDisplay}
         pokesItems={pokesItems}
-        pokesBeforeDisplay={pokesBeforeDisplay}
-        page={page}
-        loadMoreAmount={loadMoreAmount}
+        hasMore={hasMore}
         setPage={setPage}
       />
     </div>

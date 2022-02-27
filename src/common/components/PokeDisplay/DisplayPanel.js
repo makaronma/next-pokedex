@@ -8,16 +8,14 @@ import { memo } from "react";
 const DisplayPanel = ({
   pokesDisplay,
   pokesItems,
-  pokesBeforeDisplay,
-  page,
-  loadMoreAmount,
+  hasMore,
   setPage,
 }) => {
   return (
     <Box sx={{ minHeight: 850 }}>
       <PokesContainer>{pokesDisplay && pokesItems}</PokesContainer>
 
-      {pokesBeforeDisplay.length <= page * loadMoreAmount + loadMoreAmount ? (
+      {hasMore? (
         "NO More"
       ) : (
         <LoadMoreBtn setPage={setPage} />
