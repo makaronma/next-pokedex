@@ -1,15 +1,13 @@
 import Head from "next/head";
-import Box from "@mui/material/Box";
 
 import PokeItem from "common/components/PokeDisplay/Item";
-import PokesContainer from "common/components/PokeDisplay/ItemsContainer";
 import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getAllPokes, getAllTypesName } from "common/utils/pokeApi";
 import NormalSearch from "common/components/PokeDisplay/NormalSearch";
-import LoadMoreBtn from "common/components/PokeDisplay/LoadMoreBtn";
 import usePokeSearch from "common/hooks/usePokeSearch";
 import SearchBtn from "common/components/PokeDisplay/SearchBtn";
+import DisplayPanel from "common/components/PokeDisplay/DisplayPanel";
 
 export default function Home({ pokes, types, loadMoreAmount }) {
   const [pokesBeforeDisplay, setPokesBeforeDisplay] = useState([]);
@@ -31,7 +29,7 @@ export default function Home({ pokes, types, loadMoreAmount }) {
 
   // Handle Display Pokes(Init && Loadmore)
   useEffect(() => {
-    console.log("display pokes");
+    // console.log("display pokes");
     const start = page * loadMoreAmount;
     const end = start + loadMoreAmount;
     setPokesDisplay((prev) => [
@@ -42,8 +40,8 @@ export default function Home({ pokes, types, loadMoreAmount }) {
 
   // Assign Filtered Pokes Before Display
   useEffect(() => {
-    console.log("update filtered");
-    console.log(filteredPokes);
+    // console.log("update filtered");
+    // console.log(filteredPokes);
     setPokesDisplay([]);
     setPokesBeforeDisplay(filteredPokes);
     setPage(0);
@@ -53,36 +51,21 @@ export default function Home({ pokes, types, loadMoreAmount }) {
     setConditions(conditionsBeforeSearch);
   };
 
-  const pokesItems = useMemo(
-    () => (
+  const pokesItems = useMemo(() => {
+    // console.log("update Item");
+    return (
       <>
         {pokesDisplay.map((poke) => (
           <PokeItem
             key={`pokeListItem-${poke.id}`}
-            id={poke.id}
+            pokeId={`${poke.id}`}
             name={poke.name}
             img={poke.image}
           />
         ))}
       </>
-    ),
-    [pokesDisplay]
-  );
-
-  const DisplayPanel = useCallback(
-    () => (
-      <Box sx={{ minHeight: 850 }}>
-        <PokesContainer>{pokesDisplay && pokesItems}</PokesContainer>
-
-        {pokesBeforeDisplay.length <= page * loadMoreAmount + loadMoreAmount ? (
-          "NO More"
-        ) : (
-          <LoadMoreBtn setPage={setPage} />
-        )}
-      </Box>
-    ),
-    [loadMoreAmount, page, pokesBeforeDisplay.length, pokesDisplay, pokesItems]
-  );
+    );
+  }, [pokesDisplay]);
 
   return (
     <div>
@@ -95,7 +78,14 @@ export default function Home({ pokes, types, loadMoreAmount }) {
       <NormalSearch setConditions={setConditionsBeforeSearch} />
       <SearchBtn onClick={searchOnClick} />
       <AdvanceSearch types={types} setConditions={setConditionsBeforeSearch} />
-      <DisplayPanel />
+      <DisplayPanel
+        pokesDisplay={pokesDisplay}
+        pokesItems={pokesItems}
+        pokesBeforeDisplay={pokesBeforeDisplay}
+        page={page}
+        loadMoreAmount={loadMoreAmount}
+        setPage={setPage}
+      />
     </div>
   );
 }

@@ -3,15 +3,18 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
+
 import Link from "next/link";
 import Image from "next/image";
-import { useRef } from "react";
 
-const Item = ({ id, name, img }) => {
+import { memo, useRef } from "react";
+
+const Item = ({ pokeId, name, img }) => {
   const lazyRoot = useRef(null);
+
   return (
     <Grid item xs={6} md={3}>
-      <Link href={`/pokes/${id}`} passHref>
+      <Link href={`/pokes/${pokeId}`} passHref>
         <CardActionArea>
           <CardMedia
             style={{ display: "flex", justifyContent: "center", padding: 10 }}
@@ -28,7 +31,7 @@ const Item = ({ id, name, img }) => {
           </CardMedia>
           <CardContent>
             <Typography gutterBottom variant="body1" component="div">
-              {id}
+              {pokeId}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {name}
@@ -40,4 +43,4 @@ const Item = ({ id, name, img }) => {
   );
 };
 
-export default Item;
+export default memo(Item);
