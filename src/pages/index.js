@@ -4,25 +4,26 @@ import Box from "@mui/material/Box";
 import PokeItem from "common/components/PokeDisplay/Item";
 import PokesContainer from "common/components/PokeDisplay/ItemsContainer";
 import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getAllPokes, getAllTypesName } from "common/utils/pokeApi";
 import NormalSearch from "common/components/PokeDisplay/NormalSearch";
 import LoadMoreBtn from "common/components/PokeDisplay/LoadMoreBtn";
-
-//
+import usePokeSearch from "common/hooks/usePokeSearch";
 
 export default function Home({ pokes, types, loadMoreAmount }) {
   const [pokesBeforeDisplay, setPokesBeforeDisplay] = useState([]);
   const [pokesDisplay, setPokesDisplay] = useState([]);
   const [page, setPage] = useState(0);
-  const filterKeyword = useRef();
 
-  // Init pokes array
+  const [conditions, setConditions] = useState({});
+  const filteredPokes = usePokeSearch(pokes, conditions);
+
+  // Assign Init Pokes Before Display
   useEffect(() => {
     setPokesBeforeDisplay(pokes);
   }, [pokes]);
 
-  // Init and Loadmore (change pokes array)
+  // Handle Display Pokes(Init && Loadmore)
   useEffect(() => {
     const start = page * loadMoreAmount;
     const end = start + loadMoreAmount;
@@ -32,30 +33,14 @@ export default function Home({ pokes, types, loadMoreAmount }) {
     ]);
   }, [pokesBeforeDisplay, page, loadMoreAmount]);
 
-  const updatePokes = useCallback((newPokes) => {
+  // Assign Filtered Pokes Before Display
+  useEffect(() => {
+    // console.log(conditions);
+    if (Object.keys(conditions).length === 0) return;
     setPokesDisplay([]);
-    setPokesBeforeDisplay(newPokes);
+    setPokesBeforeDisplay(filteredPokes);
     setPage(0);
-  }, []);
-
-  // filter and reset poke array
-  const handleFilterPoke = useCallback(() => {
-    const regex = new RegExp(`${filterKeyword.current.value}`);
-    const matchName = (poke) => {
-      return poke.name.match(regex);
-    };
-
-    const matchID = (poke) => {
-      return String(poke.id).match(regex);
-    };
-
-    const checkMatchCriteria = (poke) => {
-      return matchName(poke) || matchID(poke);
-    };
-
-    const filteredPokes = pokes.filter((poke) => checkMatchCriteria(poke));
-    updatePokes(filteredPokes);
-  }, [pokes, updatePokes]);
+  }, [conditions, filteredPokes]);
 
   const pokesItems = useMemo(
     () => (
@@ -81,11 +66,9 @@ export default function Home({ pokes, types, loadMoreAmount }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <NormalSearch
-        filterKeyword={filterKeyword}
-        handleFilterPoke={handleFilterPoke}
-      />
-      <AdvanceSearch types={types} updatePokes={updatePokes} pokes={pokes} />
+      <NormalSearch setConditions={setConditions} />
+      {/* <AdvanceSearch types={types}
+        setConditions={setConditions} /> */}
 
       <Box sx={{ minHeight: 850 }}>
         <PokesContainer>{pokesDisplay && pokesItems}</PokesContainer>
