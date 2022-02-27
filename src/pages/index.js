@@ -1,8 +1,8 @@
 import Head from "next/head";
 
-import PokeItem from "common/components/PokeDisplay/Item";
+import { useState } from "react";
+
 import AdvanceSearch from "common/components/PokeDisplay/AdvanceSearch";
-import { useState, useMemo } from "react";
 import { getAllPokes, getAllTypesName } from "common/utils/pokeApi";
 import NormalSearch from "common/components/PokeDisplay/NormalSearch";
 import usePokeSearch from "common/hooks/usePokeSearch";
@@ -28,21 +28,6 @@ export default function Home({ pokes, types, loadMoreAmount }) {
     setConditions(conditionsBeforeSearch);
   };
 
-  const pokesItems = useMemo(() => {
-    return (
-      <>
-        {pokesDisplay.map((poke) => (
-          <PokeItem
-            key={`pokeListItem-${poke.id}`}
-            pokeId={`${poke.id}`}
-            name={poke.name}
-            img={poke.image}
-          />
-        ))}
-      </>
-    );
-  }, [pokesDisplay]);
-
   return (
     <div>
       <Head>
@@ -56,7 +41,6 @@ export default function Home({ pokes, types, loadMoreAmount }) {
       <AdvanceSearch types={types} setConditions={setConditionsBeforeSearch} />
       <DisplayPanel
         pokesDisplay={pokesDisplay}
-        pokesItems={pokesItems}
         hasMore={hasMore}
         setPage={setPage}
       />
@@ -73,7 +57,6 @@ export async function getStaticProps() {
     props: {
       pokes,
       types,
-
       loadMoreAmount,
     },
   };

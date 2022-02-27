@@ -13,6 +13,11 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png"></link>
+          <meta name="theme-color" content="#fff" />
+          
+          
           {this.props.emotionStyleTags}
         </Head>
         <body>
