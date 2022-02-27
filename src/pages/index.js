@@ -67,8 +67,8 @@ export default function Home({ pokes, types, loadMoreAmount }) {
       </Head>
 
       <NormalSearch setConditions={setConditions} />
-      {/* <AdvanceSearch types={types}
-        setConditions={setConditions} /> */}
+       <AdvanceSearch types={types}
+        setConditions={setConditions} /> 
 
       <Box sx={{ minHeight: 850 }}>
         <PokesContainer>{pokesDisplay && pokesItems}</PokesContainer>
